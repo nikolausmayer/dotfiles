@@ -55,6 +55,10 @@
   Plugin 'godlygeek/tabular'
   " Python code folding
   Plugin 'tmhedberg/simpylfold'
+  " Only recompute folds when file write happens
+  Plugin 'konfekt/fastfold'
+  " Git diffs in the gutter
+  Plugin 'airblade/vim-gitgutter'
 
   " Directly send scripts to Blender
   Plugin 'mipmip/vim-run-in-blender'
@@ -98,6 +102,7 @@ nmap <leader>j <Plug>(quickhl-cword-toggle)
 " Airline
 " Get powerline fonts from https://github.com/powerline/fonts
 let g:airline_powerline_fonts = 1
+"let g:airline_section_b = '%{strftime("%c")}'
 let g:airline_section_y = '%{ObsessionStatus()} BN:%{bufnr("%")}'
 let g:airline_theme = 'sol'
 
@@ -117,6 +122,9 @@ let g:multi_cursor_next_key='<C-l>'
 let g:multi_cursor_prev_key='<C-j>'
 let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
+
+" Signature (text marks are colored if there is a GitGutter sign in the gutter)
+let g:SignatureMarkTextHLDynamic = 1
 
 
 "//////////////////////////////////////////////////////////////////////
