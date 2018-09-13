@@ -1,0 +1,20 @@
+
+## Page Up/Down "scroll" instead of navigating whole pages
+map [normal]     <PageUp>   scroll half-up
+map [normal]     <PageDown> scroll half-down
+map [fullscreen] <PageUp>   scroll half-up
+map [fullscreen] <PageDown> scroll half-down
+
+## Disable all guioptions (no statusbar, messagebar, or scrollbars)
+set guioptions ""
+
+## Adjust default size to DIN A4 format
+set window-width 800
+set window-height 1142 ## (1132 + slack)
+
+## Copy into X clipboard
+set selection-clipboard "clipboard"
+
+## In dual-page mode, the first page is a *left* page
+set first-page-column 1
+
