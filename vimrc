@@ -1,9 +1,35 @@
-" Setting up Vundle - the VIM plugin bundler
-" This will auto-install Vundle and all listed plugins
+
+" Set leader to ',' (comma)
+let mapleader=','
+
+" Prior-to-loading plugin setups
+"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+" Syntastic (enable C++11)
+"let g:syntastic_cpp_compiler_options = ' -std=c++11'
+" ALE
+let g:ale_enabled = 1
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_save = 0
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_warn_about_trailing_whitespace = 0
+let g:ale_warn_about_trailing_blank_lines = 0
+let g:ale_python_flake8_options="--ignore=E111,E114,E121,E126,E127,E201,E221,E241,E266,E302,E303,E305,E306,E501"
+let g:ale_python_pylint_options="--disable=trailing-newlines,fixme,line-too-long,invalid-name,missing-docstring --indent-string='  ' --indent-after-paren='  '"
+let g:ale_cpp_gcc_options="-std=c++11 -W -Wall -Wextra -Wpedantic"
+" Manual linting
+nnoremap <leader>a :ALELint<CR>
+" Navigate to ALE error/warning lines
+nnoremap <leader>an :ALENextWrap<CR>
+nnoremap <leader>ap :ALEPreviousWrap<CR>
+
+" PLUGINS
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
   let haveVundle=1
   let vundle_readme=expand('~/.vim/bundle/vundle/README.md')
+  " Setting up Vundle - the VIM plugin bundler
+  " This will auto-install Vundle and all listed plugins
   if !filereadable(vundle_readme)
     echo "Installing Vundle..."
     echo ""
@@ -18,12 +44,14 @@
   " Solarized color scheme
   Plugin 'altercation/vim-colors-solarized'
   " Syntax highlighter
-  Plugin 'Syntastic'
+  "Plugin 'Syntastic'
+  " Syntax checker and linter
+  Plugin 'w0rp/ale'
   " Ctags 
   Plugin 'majutsushi/tagbar'
   " File system tree
-  Plugin 'scrooloose/nerdtree'
-  Plugin 'jistr/vim-nerdtree-tabs'
+  "Plugin 'scrooloose/nerdtree'
+  "Plugin 'jistr/vim-nerdtree-tabs'
   Plugin 'fholgado/minibufexpl.vim'
   " Add, delete, change surrounding ',",(,[,{,< and HTML-tags
   Plugin 'tpope/vim-surround'
@@ -50,7 +78,7 @@
   " Run Async shell commands
   Plugin 'skywind3000/asyncrun.vim'
   " Multiple selections
-  Plugin 'terryma/vim-multiple-cursors'
+  "Plugin 'terryma/vim-multiple-cursors'
   " Align by patterns using :Tabularize 
   Plugin 'godlygeek/tabular'
   " Python code folding
@@ -59,6 +87,10 @@
   Plugin 'konfekt/fastfold'
   " Git diffs in the gutter
   Plugin 'airblade/vim-gitgutter'
+  " Indentation guides
+  Plugin 'yggdroot/indentline'
+  " Commenting
+  Plugin 'scrooloose/nerdcommenter'
 
   " Directly send scripts to Blender
   Plugin 'mipmip/vim-run-in-blender'
@@ -72,15 +104,11 @@
 "/////////////////////////////////////////////////////////////////////
 
 
-" Set leader to ',' (comma)
-let mapleader=','
-
-
-" Plugin setups
+" Post-loading plugin setups
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 " Syntastic (enable C++11)
-let g:syntastic_cpp_compiler_options = ' -std=c++11'
+"let g:syntastic_cpp_compiler_options = ' -std=c++11'
 
 " Tagbar (find the CTags bin first)
 let tagbar_ctags_bin='~/.vim/exuberant-ctags/build/bin/ctags'
@@ -126,6 +154,11 @@ let g:multi_cursor_quit_key='<Esc>'
 " Signature (text marks are colored if there is a GitGutter sign in the gutter)
 let g:SignatureMarkTextHLDynamic = 1
 
+" Indentation guides
+let g:indentLine_char = '┆'
+let g:indentLine_enabled = 0
+let g:indentLine_setColors = 0
+
 
 "//////////////////////////////////////////////////////////////////////
 "/////////////////////////////////////////////////////////////////////
@@ -147,7 +180,7 @@ filetype plugin on
 "(set list)  " <- uncomment for default listchars
 set listchars=tab:▸\ ,eol:¬
 " Toggle invisible characters with <leader><l>
-nnoremap <leader>l :set list!<CR> :call TYShowBreak()<CR>
+nnoremap <leader>l :set list!<CR> :call TYShowBreak()<CR> :IndentLinesToggle<CR>
 " Quick buffer switch with <leader><leader>
 "nmap <leader><leader> :b#<CR>
 " Clear search highlighting with <leader><space>
@@ -284,9 +317,6 @@ nnoremap <C-Down> :wincmd j<CR>
 nnoremap <C-Left> :wincmd h<CR>
 nnoremap <C-Right> :wincmd l<CR>
 
-" Fix Python indentation
-autocmd FileType python set shiftwidth=2 | set tabstop=2
-
 
 " Folding
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -301,12 +331,13 @@ autocmd FileType python set shiftwidth=2 | set tabstop=2
   vnoremap <space> za
 
   " "Refocus" folds
-  nnoremap ,z zMzvzz
+  "nnoremap ,z zMzvzz
 
   " C++
   augroup ft_cpp
     au!
     au FileType cpp setlocal foldmethod=marker foldmarker={,}
+    let b:ale_linters = ['gcc']
   augroup END
   " CUDA
   augroup ft_cuda
@@ -326,18 +357,31 @@ autocmd FileType python set shiftwidth=2 | set tabstop=2
   " CSS
   au FileType css    setlocal foldmethod=syntax
   " Python
-  au FileType python setlocal foldmethod=indent
+  augroup ft_py
+    au!
+    " Fix Python indentation
+    au FileType python set shiftwidth=2 | set tabstop=2
+    au FileType python setlocal foldmethod=indent
+    let b:ale_linters = ['flake8', 'pylint']
+  augroup END
+
+  " Remember folds
+  augroup remember_folds
+    au!
+    au BufWinLeave * mkview
+    au BufWinEnter * silent! loadview
+  augroup END
 "//////////////////////////////////////////////////////////////////////
 "/////////////////////////////////////////////////////////////////////
 
 
 " Make sure Vim returns to the same line when you reopen a file.
-augroup line_return
-  au!
-  au BufReadPost *
-        \ if line("'\"") > 0 && line("'\"") <= line("$") |
-        \     execute 'normal! g`"zvzz' |
-        \ endif
-augroup END
+"augroup line_return
+"  au!
+"  au BufReadPost *
+"        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+"        \     execute 'normal! g`"zvzz' |
+"        \ endif
+"augroup END
 
 
