@@ -22,10 +22,13 @@ nnoremap <leader>a :ALELint<CR>
 " Navigate to ALE error/warning lines
 nnoremap <leader>an :ALENextWrap<CR>
 nnoremap <leader>ap :ALEPreviousWrap<CR>
+" ALE linters per filetype
+let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellcheck']}
+
 
 " PLUGINS
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
   let haveVundle=1
   let vundle_readme=expand('~/.vim/bundle/vundle/README.md')
   " Setting up Vundle - the VIM plugin bundler
@@ -100,13 +103,13 @@ nnoremap <leader>ap :ALEPreviousWrap<CR>
     echo ""
     :PluginInstall
   endif
-"//////////////////////////////////////////////////////////////////////
+"/////////////////////////////////////////////////////////////////////
 "/////////////////////////////////////////////////////////////////////
 
 
 " Post-loading plugin setups
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 " Syntastic (enable C++11)
 "let g:syntastic_cpp_compiler_options = ' -std=c++11'
 
@@ -160,7 +163,7 @@ let g:indentLine_enabled = 0
 let g:indentLine_setColors = 0
 
 
-"//////////////////////////////////////////////////////////////////////
+"/////////////////////////////////////////////////////////////////////
 "/////////////////////////////////////////////////////////////////////
 
 
@@ -244,8 +247,8 @@ set undofile
 runtime macros/matchit.vim
 
 " Solarized color scheme
-set t_Co=16  "choose the right color palette
-set background=dark
+set t_Co=256  "choose the right color palette
+set background=light
 colorscheme solarized
 
 " Status line
@@ -334,36 +337,20 @@ nnoremap <C-Right> :wincmd l<CR>
   "nnoremap ,z zMzvzz
 
   " C++
-  augroup ft_cpp
+  augroup filetypes
     au!
-    au FileType cpp setlocal foldmethod=marker foldmarker={,}
-    let b:ale_linters = ['gcc']
-  augroup END
-  " CUDA
-  augroup ft_cuda
-    au!
-    au FileType cuda setlocal foldmethod=marker foldmarker={,}
-  augroup END
-  " C
-  augroup ft_c
-    au!
-    au FileType c setlocal foldmethod=marker foldmarker={,}
+    au FileType cpp    setlocal foldmethod=marker foldmarker={,}
+    au FileType cuda   setlocal foldmethod=marker foldmarker={,}
+    au FileType c      setlocal foldmethod=marker foldmarker={,}
+    " Fix Python indentation
+    au FileType python setlocal shiftwidth=2 | setlocal tabstop=2
+    au FileType python setlocal foldmethod=indent
+    au FileType xml    setlocal foldmethod=syntax
+    au FileType html   setlocal foldmethod=syntax
+    au FileType css    setlocal foldmethod=syntax
   augroup END
 
-  " XML
   let g:xml_syntax_folding=1
-  au FileType xml    setlocal foldmethod=syntax
-  au FileType html   setlocal foldmethod=syntax
-  " CSS
-  au FileType css    setlocal foldmethod=syntax
-  " Python
-  augroup ft_py
-    au!
-    " Fix Python indentation
-    au FileType python set shiftwidth=2 | set tabstop=2
-    au FileType python setlocal foldmethod=indent
-    let b:ale_linters = ['flake8', 'pylint']
-  augroup END
 
   " Remember folds
   augroup remember_folds
