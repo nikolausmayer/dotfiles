@@ -19,6 +19,7 @@ let g:ale_python_pylint_options="--disable=trailing-newlines,fixme,line-too-long
 let g:ale_cpp_gcc_options="-std=c++11 -W -Wall -Wextra -Wpedantic"
 " Manual linting
 nnoremap <leader>a :ALELint<CR>
+nnoremap <leader>aa :ALEToggle<CR>
 " Navigate to ALE error/warning lines
 nnoremap <leader>an :ALENextWrap<CR>
 nnoremap <leader>ap :ALEPreviousWrap<CR>
@@ -75,7 +76,7 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   " Gundo (undo tree helper)
   Plugin 'sjl/gundo.vim'
   " JSON tools
-  Plugin 'elzr/vim-json'
+  "Plugin 'elzr/vim-json'
   " Work with GPG encrypted files
   Plugin 'jamessan/vim-gnupg'
   " Run Async shell commands
@@ -87,16 +88,29 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   " Python code folding
   Plugin 'tmhedberg/simpylfold'
   " Only recompute folds when file write happens
-  Plugin 'konfekt/fastfold'
+  "Plugin 'konfekt/fastfold'
   " Git diffs in the gutter
   Plugin 'airblade/vim-gitgutter'
   " Indentation guides
   Plugin 'yggdroot/indentline'
   " Commenting
-  Plugin 'scrooloose/nerdcommenter'
+  "Plugin 'scrooloose/nerdcommenter'
+  " LaTeX / Zathura
+  Plugin 'lervag/vimtex'
+  " LaTeX concealing
+  "Plugin 'KeitaNakamura/tex-conceal.vim'
+  " Code completion engine
+  Plugin 'Valloric/YouCompleteMe'
+  " CtrlP
+  "Plugin 'kien/ctrlp.vim'
+  " Increment lists of numbers etc
+  Plugin 'triglav/vim-visual-increment'
+  " Grow/shrink visual regions
+  Plugin 'terryma/vim-expand-region'
+
 
   " Directly send scripts to Blender
-  Plugin 'mipmip/vim-run-in-blender'
+  "Plugin 'mipmip/vim-run-in-blender'
   
   if haveVundle == 0
     echo "Installing plugins via vundle, please ignore key map error messages"
@@ -118,7 +132,7 @@ let tagbar_ctags_bin='~/.vim/exuberant-ctags/build/bin/ctags'
 nnoremap <F7> :TagbarToggle<CR>
 
 " NERDtree and NERDtree-Tabs
-nnoremap <F5> :NERDTreeTabsToggle<CR>
+"nnoremap <F5> :NERDTreeTabsToggle<CR>
 
 " MiniBufExplorer
 nnoremap <F4> :MBEToggle<CR>
@@ -145,7 +159,7 @@ let g:gundo_auto_preview = 0
 
 " JSON.vim
 " Do not hide quotes
-let g:vim_json_syntax_conceal = 0
+"let g:vim_json_syntax_conceal = 0
 
 " Multiple selections
 let g:multi_cursor_use_default_mapping=0
@@ -162,6 +176,23 @@ let g:indentLine_char = '┆'
 let g:indentLine_enabled = 0
 let g:indentLine_setColors = 0
 
+" vimtex
+let g:vimtex_mappings_enabled = 0
+let g:tex_flavor = 'latex'
+"let g:vimtex_view_method = 'zathura'
+let g:vimtex_quickfix_enabled = 0
+let g:vimtex_view_forward_search_on_start = 0
+let g:vimtex_compiler_method = 'latexmk'
+"let g:tex_conceal='abdmg' 
+nmap <leader>la <plug>(vimtex-compile)<CR>
+
+" expand-region
+map + <Plug>(expand_region_expand)
+map - <Plug>(expand_region_shrink)
+
+" YouCompleteMe
+let g:ycm_autoclose_preview_window_after_completion = 1
+set splitbelow
 
 "/////////////////////////////////////////////////////////////////////
 "/////////////////////////////////////////////////////////////////////
@@ -173,6 +204,7 @@ set ttimeoutlen=50
 
 " UTF-8
 set encoding=utf-8
+set fileencoding=utf-8
 
 syntax on
 syntax enable
@@ -309,7 +341,7 @@ nnoremap <S-Tab> <<
 inoremap <S-Tab> <ESC><<i
 
 " Make mappings available for Ctrl+{Del|arrow keys}
-map <ESC>[3;5~ <C-Del>
+"map <ESC>[3;5~ <C-Del>
 map <ESC>[1;5A <C-Up>
 map <ESC>[1;5B <C-Down>
 map <ESC>[1;5D <C-Left>
@@ -324,12 +356,12 @@ nnoremap <C-Right> :wincmd l<CR>
 " Folding
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-  " Open documents with all folds open
-  set foldlevelstart=99
-  " Set background color of fold marker
-  hi Folded ctermbg=8
+  "" Open documents with all folds open
+  set foldlevel=99
+  "" Set background color of fold marker
+  hi Folded ctermbg=0
 
-  " <space> to toggle folds
+  "" <space> to toggle folds
   nnoremap <space> za
   vnoremap <space> za
 
@@ -339,25 +371,30 @@ nnoremap <C-Right> :wincmd l<CR>
   " C++
   augroup filetypes
     au!
-    au FileType cpp    setlocal foldmethod=marker foldmarker={,}
-    au FileType cuda   setlocal foldmethod=marker foldmarker={,}
-    au FileType c      setlocal foldmethod=marker foldmarker={,}
-    " Fix Python indentation
-    au FileType python setlocal shiftwidth=2 | setlocal tabstop=2
-    au FileType python setlocal foldmethod=indent
-    au FileType xml    setlocal foldmethod=syntax
+  "  au FileType cpp    setlocal foldmethod=marker foldmarker={,}
+  "  au FileType cuda   setlocal foldmethod=marker foldmarker={,}
+  "  au FileType c      setlocal foldmethod=marker foldmarker={,}
+  "  " Fix Python indentation
+  "  au FileType python setlocal shiftwidth=2 | setlocal tabstop=2
+  "  au FileType python setlocal foldmethod=indent
+  "  au FileType xml    setlocal foldmethod=syntax
     au FileType html   setlocal foldmethod=syntax
-    au FileType css    setlocal foldmethod=syntax
+  "  au FileType css    setlocal foldmethod=syntax
   augroup END
 
-  let g:xml_syntax_folding=1
+  "let g:xml_syntax_folding=1
 
-  " Remember folds
+  "" Remember folds
   augroup remember_folds
     au!
     au BufWinLeave * mkview
     au BufWinEnter * silent! loadview
   augroup END
+
+  "augroup latex
+  "  au!
+  "  au FileType tex     setlocal conceallevel=2 
+  "augroup END
 "//////////////////////////////////////////////////////////////////////
 "/////////////////////////////////////////////////////////////////////
 
