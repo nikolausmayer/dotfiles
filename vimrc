@@ -5,18 +5,26 @@ let mapleader=','
 " Prior-to-loading plugin setups
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-" Syntastic (enable C++11)
-"let g:syntastic_cpp_compiler_options = ' -std=c++11'
 " ALE
 let g:ale_enabled = 1
+" Show in quickfix window instead of location list
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+" Frequency of checking
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_save = 0
-let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_text_changed = 'always'
+" Linting options
 let g:ale_warn_about_trailing_whitespace = 0
 let g:ale_warn_about_trailing_blank_lines = 0
+" Python
 let g:ale_python_flake8_options="--ignore=E111,E114,E121,E126,E127,E201,E221,E241,E266,E302,E303,E305,E306,E501"
 let g:ale_python_pylint_options="--disable=trailing-newlines,fixme,line-too-long,invalid-name,missing-docstring --indent-string='  ' --indent-after-paren='  '"
-let g:ale_cpp_gcc_options="-std=c++11 -W -Wall -Wextra -Wpedantic"
+" C++
+let g:ale_cpp_gcc_options="-W -Wall -Wextra -Wpedantic -std=c++17 -I. -Isrc"
+" Shell
+" Ignore SC2006="$(...) instead of `...`"
+let g:ale_sh_shellcheck_options="-e SC2006"
 " Manual linting
 nnoremap <leader>a :ALELint<CR>
 nnoremap <leader>aa :ALEToggle<CR>
@@ -71,6 +79,7 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   Plugin 'nelstrom/vim-visual-star-search'
   " Status/tabline
   Plugin 'bling/vim-airline'
+  Plugin 'vim-airline/vim-airline-themes'
   " TODO tags etc
   Plugin 'TaskList.vim'
   " Gundo (undo tree helper)
@@ -96,11 +105,11 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   " Commenting
   "Plugin 'scrooloose/nerdcommenter'
   " LaTeX / Zathura
-  Plugin 'lervag/vimtex'
+  "Plugin 'lervag/vimtex'
   " LaTeX concealing
   "Plugin 'KeitaNakamura/tex-conceal.vim'
   " Code completion engine
-  Plugin 'Valloric/YouCompleteMe'
+  "Plugin 'Valloric/YouCompleteMe'
   " CtrlP
   "Plugin 'kien/ctrlp.vim'
   " Increment lists of numbers etc
@@ -149,7 +158,7 @@ nmap <leader>j <Plug>(quickhl-cword-toggle)
 let g:airline_powerline_fonts = 1
 "let g:airline_section_b = '%{strftime("%c")}'
 let g:airline_section_y = '%{ObsessionStatus()} BN:%{bufnr("%")}'
-let g:airline_theme = 'sol'
+let g:airline_theme = 'solarized'
 
 " Gundo
 nnoremap <F4> :GundoToggle<CR>
@@ -176,15 +185,15 @@ let g:indentLine_char = '┆'
 let g:indentLine_enabled = 0
 let g:indentLine_setColors = 0
 
-" vimtex
-let g:vimtex_mappings_enabled = 0
-let g:tex_flavor = 'latex'
-"let g:vimtex_view_method = 'zathura'
-let g:vimtex_quickfix_enabled = 0
-let g:vimtex_view_forward_search_on_start = 0
-let g:vimtex_compiler_method = 'latexmk'
-"let g:tex_conceal='abdmg' 
-nmap <leader>la <plug>(vimtex-compile)<CR>
+"" vimtex
+"let g:vimtex_mappings_enabled = 0
+"let g:tex_flavor = 'latex'
+""let g:vimtex_view_method = 'zathura'
+"let g:vimtex_quickfix_enabled = 0
+"let g:vimtex_view_forward_search_on_start = 0
+"let g:vimtex_compiler_method = 'latexmk'
+""let g:tex_conceal='abdmg' 
+"nmap <leader>la <plug>(vimtex-compile)<CR>
 
 " expand-region
 map + <Plug>(expand_region_expand)
@@ -272,7 +281,9 @@ hi CursorLine term=reverse ctermbg=0 cterm=NONE
 set hidden
 
 " Persistent undo/redo history
-set undofile
+if $VIM_CLEAN_MODE != 1
+  set undofile
+endif
 "set undodir=~/.vim/undodir/
 
 " <%> can switch if/elsif/else/end, XML tags etc.
@@ -357,7 +368,8 @@ nnoremap <C-Right> :wincmd l<CR>
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
   "" Open documents with all folds open
-  set foldlevel=99
+  set foldlevelstart=99
+  set nofoldenable
   "" Set background color of fold marker
   hi Folded ctermbg=0
 
@@ -375,26 +387,28 @@ nnoremap <C-Right> :wincmd l<CR>
   "  au FileType cuda   setlocal foldmethod=marker foldmarker={,}
   "  au FileType c      setlocal foldmethod=marker foldmarker={,}
   "  " Fix Python indentation
-  "  au FileType python setlocal shiftwidth=2 | setlocal tabstop=2
   "  au FileType python setlocal foldmethod=indent
+  "  au FileType python setlocal shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=expr
   "  au FileType xml    setlocal foldmethod=syntax
     au FileType html   setlocal foldmethod=syntax
   "  au FileType css    setlocal foldmethod=syntax
   augroup END
 
+
   "let g:xml_syntax_folding=1
 
   "" Remember folds
-  augroup remember_folds
-    au!
-    au BufWinLeave * mkview
-    au BufWinEnter * silent! loadview
-  augroup END
-
-  "augroup latex
-  "  au!
-  "  au FileType tex     setlocal conceallevel=2 
-  "augroup END
+  if $VIM_CLEAN_MODE != 1
+    set viewoptions=cursor,folds
+    augroup remember_folds
+      au!
+      " view files are about 500 bytes
+      " bufleave but not bufwinleave captures closing 2nd tab
+      " nested is needed by bufwrite* (if triggered via other autocmd)
+      au BufWritePost ?* nested silent! mkview! %:p:h/.%:t.view~
+      au BufWinEnter ?* silent! source %:p:h/.%:t.view~
+    augroup END
+  endif
 "//////////////////////////////////////////////////////////////////////
 "/////////////////////////////////////////////////////////////////////
 
