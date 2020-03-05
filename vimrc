@@ -18,10 +18,10 @@ let g:ale_lint_on_text_changed = 'always'
 let g:ale_warn_about_trailing_whitespace = 0
 let g:ale_warn_about_trailing_blank_lines = 0
 " Python
-let g:ale_python_flake8_options="--ignore=E111,E114,E121,E126,E127,E201,E221,E241,E266,E302,E303,E305,E306,E501"
+let g:ale_python_flake8_options="--ignore=E111,E114,E121,E126,E127,E201,E202,E221,E222,E225,E226,E241,E266,E302,E303,E305,E306,E501"
 let g:ale_python_pylint_options="--disable=trailing-newlines,fixme,line-too-long,invalid-name,missing-docstring --indent-string='  ' --indent-after-paren='  '"
 " C++
-let g:ale_cpp_gcc_options="-W -Wall -Wextra -Wpedantic -std=c++17 -I. -Isrc"
+let g:ale_cpp_gcc_options="-W -Wall -Wextra -Wpedantic -fopenmp -pthread -std=c++17 -I. -Isrc"
 " Shell
 " Ignore SC2006="$(...) instead of `...`"
 let g:ale_sh_shellcheck_options="-e SC2006"
@@ -32,7 +32,7 @@ nnoremap <leader>aa :ALEToggle<CR>
 nnoremap <leader>an :ALENextWrap<CR>
 nnoremap <leader>ap :ALEPreviousWrap<CR>
 " ALE linters per filetype
-let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellcheck']}
+let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellcheck'], 'cuda': ['nvcc']}
 
 
 " PLUGINS
@@ -105,7 +105,7 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   " Commenting
   "Plugin 'scrooloose/nerdcommenter'
   " LaTeX / Zathura
-  "Plugin 'lervag/vimtex'
+  Plugin 'lervag/vimtex'
   " LaTeX concealing
   "Plugin 'KeitaNakamura/tex-conceal.vim'
   " Code completion engine
@@ -188,19 +188,19 @@ let g:indentLine_setColors = 0
 "" vimtex
 "let g:vimtex_mappings_enabled = 0
 "let g:tex_flavor = 'latex'
-""let g:vimtex_view_method = 'zathura'
-"let g:vimtex_quickfix_enabled = 0
-"let g:vimtex_view_forward_search_on_start = 0
+let g:vimtex_view_method = 'zathura'
+let g:vimtex_quickfix_enabled = 0
+let g:vimtex_view_forward_search_on_start = 0
 "let g:vimtex_compiler_method = 'latexmk'
 ""let g:tex_conceal='abdmg' 
 "nmap <leader>la <plug>(vimtex-compile)<CR>
 
 " expand-region
-map + <Plug>(expand_region_expand)
-map - <Plug>(expand_region_shrink)
+"map + <Plug>(expand_region_expand)
+"map - <Plug>(expand_region_shrink)
 
 " YouCompleteMe
-let g:ycm_autoclose_preview_window_after_completion = 1
+"let g:ycm_autoclose_preview_window_after_completion = 1
 set splitbelow
 
 "/////////////////////////////////////////////////////////////////////
@@ -209,7 +209,7 @@ set splitbelow
 
 
 " Don't wait when leaving a mode
-set ttimeoutlen=50
+"set ttimeoutlen=50
 
 " UTF-8
 set encoding=utf-8
