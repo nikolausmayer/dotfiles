@@ -13,7 +13,7 @@ let g:ale_set_quickfix = 1
 " Frequency of checking
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_save = 0
-let g:ale_lint_on_text_changed = 'always'
+let g:ale_lint_on_text_changed = 1
 " Linting options
 let g:ale_warn_about_trailing_whitespace = 0
 let g:ale_warn_about_trailing_blank_lines = 0
@@ -21,7 +21,8 @@ let g:ale_warn_about_trailing_blank_lines = 0
 let g:ale_python_flake8_options="--ignore=E111,E114,E121,E126,E127,E201,E202,E221,E222,E225,E226,E241,E266,E302,E303,E305,E306,E501"
 let g:ale_python_pylint_options="--disable=trailing-newlines,fixme,line-too-long,invalid-name,missing-docstring --indent-string='  ' --indent-after-paren='  '"
 " C++
-let g:ale_cpp_gcc_options="-W -Wall -Wextra -Wpedantic -fopenmp -pthread -std=c++17 -I. -Isrc"
+let g:ale_cpp_cc_options="-W -Wall -Wextra -Wpedantic -fconcepts -pthread -std=c++2a -I. -Isrc"
+let g:ale_cpp_gcc_options="-W -Wall -Wextra -Wpedantic -fconcepts -pthread -std=c++2a -I. -Isrc"
 " Shell
 " Ignore SC2006="$(...) instead of `...`"
 let g:ale_sh_shellcheck_options="-e SC2006"
@@ -29,10 +30,10 @@ let g:ale_sh_shellcheck_options="-e SC2006"
 nnoremap <leader>a :ALELint<CR>
 nnoremap <leader>aa :ALEToggle<CR>
 " Navigate to ALE error/warning lines
-nnoremap <leader>an :ALENextWrap<CR>
-nnoremap <leader>ap :ALEPreviousWrap<CR>
+"nnoremap <leader>an :ALENextWrap<CR>
+"nnoremap <leader>ap :ALEPreviousWrap<CR>
 " ALE linters per filetype
-let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellcheck'], 'cuda': ['nvcc']}
+let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellcheck'], 'cuda': ['nvcc'], 'rust': ['rls']}
 
 
 " PLUGINS
@@ -58,17 +59,17 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   " Syntax highlighter
   "Plugin 'Syntastic'
   " Syntax checker and linter
-  Plugin 'w0rp/ale'
+  Plugin 'dense-analysis/ale'
   " Ctags 
   Plugin 'majutsushi/tagbar'
   " File system tree
   "Plugin 'scrooloose/nerdtree'
   "Plugin 'jistr/vim-nerdtree-tabs'
-  Plugin 'fholgado/minibufexpl.vim'
+  "Plugin 'fholgado/minibufexpl.vim'
   " Add, delete, change surrounding ',",(,[,{,< and HTML-tags
   Plugin 'tpope/vim-surround'
   " Session management
-  Plugin 'tpope/vim-obsession'
+  "Plugin 'tpope/vim-obsession'
   " Extend repeating per '.' to non-native commands
   Plugin 'vim-scripts/repeat.vim'
   " Highlight words
@@ -83,7 +84,8 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   " TODO tags etc
   Plugin 'TaskList.vim'
   " Gundo (undo tree helper)
-  Plugin 'sjl/gundo.vim'
+  "Plugin 'sjl/gundo.vim'
+  Plugin 'mbbill/undotree'
   " JSON tools
   "Plugin 'elzr/vim-json'
   " Work with GPG encrypted files
@@ -95,7 +97,7 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   " Align by patterns using :Tabularize 
   Plugin 'godlygeek/tabular'
   " Python code folding
-  Plugin 'tmhedberg/simpylfold'
+  "Plugin 'tmhedberg/simpylfold'
   " Only recompute folds when file write happens
   "Plugin 'konfekt/fastfold'
   " Git diffs in the gutter
@@ -105,7 +107,7 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   " Commenting
   "Plugin 'scrooloose/nerdcommenter'
   " LaTeX / Zathura
-  Plugin 'lervag/vimtex'
+  "Plugin 'lervag/vimtex'
   " LaTeX concealing
   "Plugin 'KeitaNakamura/tex-conceal.vim'
   " Code completion engine
@@ -113,9 +115,11 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   " CtrlP
   "Plugin 'kien/ctrlp.vim'
   " Increment lists of numbers etc
-  Plugin 'triglav/vim-visual-increment'
+  "Plugin 'triglav/vim-visual-increment'
   " Grow/shrink visual regions
-  Plugin 'terryma/vim-expand-region'
+  "Plugin 'terryma/vim-expand-region'
+  " Rust integration
+  Plugin 'rust-lang/rust.vim'
 
 
   " Directly send scripts to Blender
@@ -144,7 +148,7 @@ nnoremap <F7> :TagbarToggle<CR>
 "nnoremap <F5> :NERDTreeTabsToggle<CR>
 
 " MiniBufExplorer
-nnoremap <F4> :MBEToggle<CR>
+"nnoremap <F4> :MBEToggle<CR>
 
 " QuickHL
 nmap <leader>m <Plug>(quickhl-manual-this)
@@ -157,14 +161,16 @@ nmap <leader>j <Plug>(quickhl-cword-toggle)
 " Get powerline fonts from https://github.com/powerline/fonts
 let g:airline_powerline_fonts = 1
 "let g:airline_section_b = '%{strftime("%c")}'
-let g:airline_section_y = '%{ObsessionStatus()} BN:%{bufnr("%")}'
+"let g:airline_section_y = '%{ObsessionStatus()} BN:%{bufnr("%")}'
+let g:airline_section_y = 'BN:%{bufnr("%")}'
 let g:airline_theme = 'solarized'
 
-" Gundo
-nnoremap <F4> :GundoToggle<CR>
-let g:gundo_right = 1
-let g:gundo_preview_bottom = 1
-let g:gundo_auto_preview = 0
+" undotree
+"nnoremap <F4> :GundoToggle<CR>
+"let g:gundo_right = 1
+"let g:gundo_preview_bottom = 1
+"let g:gundo_auto_preview = 0
+nnoremap <F4> :UndotreeToggle<CR>
 
 " JSON.vim
 " Do not hide quotes
@@ -188,9 +194,9 @@ let g:indentLine_setColors = 0
 "" vimtex
 "let g:vimtex_mappings_enabled = 0
 "let g:tex_flavor = 'latex'
-let g:vimtex_view_method = 'zathura'
-let g:vimtex_quickfix_enabled = 0
-let g:vimtex_view_forward_search_on_start = 0
+"let g:vimtex_view_method = 'zathura'
+"let g:vimtex_quickfix_enabled = 0
+"let g:vimtex_view_forward_search_on_start = 0
 "let g:vimtex_compiler_method = 'latexmk'
 ""let g:tex_conceal='abdmg' 
 "nmap <leader>la <plug>(vimtex-compile)<CR>
@@ -294,6 +300,9 @@ set t_Co=256  "choose the right color palette
 set background=light
 colorscheme solarized
 
+" Set gutter background color to match the line number col
+highlight SignColumn ctermbg=lightgrey
+
 " Status line
 set laststatus=2
 
@@ -340,12 +349,12 @@ nmap <leader>qf :call QFixToggle()<CR>
 "au FocusLost * :wa
 
 " Cycle through buffers
-nnoremap <C-n> :bnext<CR>
-nnoremap <C-p> :bprev<CR>
+nnoremap <C-n> gt<CR>
+nnoremap <C-p> gT<CR>
 
 " Close buffer with Ctrl-W without losing splits.
 " NOTE: This only works if the buffer is not open in multiple splits
-nnoremap <C-w> :bp\|bd#<CR>
+"nnoremap <C-w> :bp\|bd#<CR>
 
 " Shift-Tab unindents (command mode and insert mode)
 nnoremap <S-Tab> <<
@@ -422,4 +431,8 @@ nnoremap <C-Right> :wincmd l<CR>
 "        \ endif
 "augroup END
 
+" Tree-style directory view
+let g:netrw_liststyle=3
+" No header in directory view
+let g:netrw_banner=0
 
