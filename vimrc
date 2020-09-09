@@ -70,6 +70,7 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   Plugin 'tpope/vim-surround'
   " Session management
   "Plugin 'tpope/vim-obsession'
+  "Plugin 'thaerkh/vim-workspace'
   " Extend repeating per '.' to non-native commands
   Plugin 'vim-scripts/repeat.vim'
   " Highlight words
@@ -82,7 +83,7 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   Plugin 'bling/vim-airline'
   Plugin 'vim-airline/vim-airline-themes'
   " TODO tags etc
-  Plugin 'TaskList.vim'
+  "Plugin 'TaskList.vim'
   " Gundo (undo tree helper)
   "Plugin 'sjl/gundo.vim'
   Plugin 'mbbill/undotree'
@@ -120,6 +121,11 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   "Plugin 'terryma/vim-expand-region'
   " Rust integration
   Plugin 'rust-lang/rust.vim'
+  " Automatic tagfiles
+  "Plugin 'xolox/vim-misc'
+  "Plugin 'xolox/vim-easytags'
+  Plugin 'ludovicchabant/vim-gutentags'
+  "Plugin 'craigemery/vim-autotag'
 
 
   " Directly send scripts to Blender
@@ -139,10 +145,37 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
 "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 " Syntastic (enable C++11)
 "let g:syntastic_cpp_compiler_options = ' -std=c++11'
+"let g:easytags_file = './.tags'
+"let g:easytags_cmd = '~/.vim/universal-ctags/install/bin/ctags'
+nnoremap <leader>t :GutentagsUpdate<CR>
+let g:gutentags_enabled = 0
+let g:gutentags_cache_dir = "."
+let g:gutentags_generate_on_new = 1 
+let g:gutentags_generate_on_missing = 1 
+let g:gutentags_generate_on_write = 1
+let g:gutentags_generate_on_empty_buffer = 0 
+let g:gutentags_ctags_executable='~/.vim/universal-ctags/install/bin/ctags'
+let g:gutentags_project_root = ['.', '.git', '.hg', '.svn', '.bzr', '_darcs', '_FOSSIL_', '.fslckout']
+"let g:autotagTagsFile="tags"
+"let g:autotagCtagsCmd="~/.vim/universal-ctags/install/bin/ctags"
+"let g:autotagVerbosityLevel=10
 
 " Tagbar (find the CTags bin first)
-let tagbar_ctags_bin='~/.vim/exuberant-ctags/build/bin/ctags'
+"let tagbar_ctags_bin='~/.vim/exuberant-ctags/build/bin/ctags'
+let tagbar_ctags_bin='~/.vim/universal-ctags/install/bin/ctags'
 nnoremap <F7> :TagbarToggle<CR>
+
+" Session management
+nnoremap <leader>ss :mksession! .vimsession<CR>
+nnoremap <leader>sl :source .vimsession<CR>
+"" Vim-Workspace (session management)
+"nnoremap <leader>s :ToggleWorkspace<CR>
+""let g:workspace_create_new_tabs = 1
+"let g:workspace_session_name = '.vimsession'
+"" Autoload session when "$ vim" is run, but not "$ vim <file>"
+"let g:workspace_session_disable_on_args = 1
+"" We already do our own persistent undos, so we disable them here
+"let g:workspace_persist_undo_history = 0
 
 " NERDtree and NERDtree-Tabs
 "nnoremap <F5> :NERDTreeTabsToggle<CR>
@@ -329,7 +362,7 @@ map <F8> :e $HOME/.bashrc<CR>
 
 " Async make
 nmap <leader>mc :AsyncRun make clean<CR>
-nmap <leader>md :AsyncRun make debug -j12 -l12<CR>
+"nmap <leader>md :AsyncRun make debug -j12 -l12<CR>
 nmap <leader>mm :AsyncRun make -j12 -l12<CR>
 nmap <leader>ms :AsyncStop<CR>
 " Toggle quickfix window
