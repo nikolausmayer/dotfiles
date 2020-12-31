@@ -26,6 +26,9 @@ let g:ale_cpp_gcc_options="-W -Wall -Wextra -Wpedantic -fconcepts -pthread -std=
 " Shell
 " Ignore SC2006="$(...) instead of `...`"
 let g:ale_sh_shellcheck_options="-e SC2006"
+" Rust
+" Disable nightly-only flags
+let g:ale_rust_rustc_options=""
 " Manual linting
 nnoremap <leader>a :ALELint<CR>
 nnoremap <leader>aa :ALEToggle<CR>
@@ -33,7 +36,7 @@ nnoremap <leader>aa :ALEToggle<CR>
 "nnoremap <leader>an :ALENextWrap<CR>
 "nnoremap <leader>ap :ALEPreviousWrap<CR>
 " ALE linters per filetype
-let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellcheck'], 'cuda': ['nvcc'], 'rust': ['rls']}
+let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellcheck'], 'cuda': ['nvcc'], 'rust': ['rustc']}
 
 
 " PLUGINS
