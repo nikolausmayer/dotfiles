@@ -26,9 +26,6 @@ let g:ale_cpp_gcc_options="-W -Wall -Wextra -Wpedantic -fconcepts -pthread -std=
 " Shell
 " Ignore SC2006="$(...) instead of `...`"
 let g:ale_sh_shellcheck_options="-e SC2006"
-" Rust
-" Disable nightly-only flags
-let g:ale_rust_rustc_options=""
 " Manual linting
 nnoremap <leader>a :ALELint<CR>
 nnoremap <leader>aa :ALEToggle<CR>
@@ -36,7 +33,7 @@ nnoremap <leader>aa :ALEToggle<CR>
 "nnoremap <leader>an :ALENextWrap<CR>
 "nnoremap <leader>ap :ALEPreviousWrap<CR>
 " ALE linters per filetype
-let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellcheck'], 'cuda': ['nvcc'], 'rust': ['rustc']}
+let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellcheck'], 'cuda': ['nvcc'], 'rust': ['rls']}
 
 
 " PLUGINS
@@ -66,13 +63,14 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   " Ctags 
   Plugin 'majutsushi/tagbar'
   " File system tree
-  "Plugin 'scrooloose/nerdtree'
+  Plugin 'scrooloose/nerdtree'
   "Plugin 'jistr/vim-nerdtree-tabs'
   "Plugin 'fholgado/minibufexpl.vim'
+  Plugin 'thasmin/minibufexpl.vim'
   " Add, delete, change surrounding ',",(,[,{,< and HTML-tags
   Plugin 'tpope/vim-surround'
   " Session management
-  "Plugin 'tpope/vim-obsession'
+  Plugin 'tpope/vim-obsession'
   "Plugin 'thaerkh/vim-workspace'
   " Extend repeating per '.' to non-native commands
   Plugin 'vim-scripts/repeat.vim'
@@ -123,11 +121,11 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   " Grow/shrink visual regions
   "Plugin 'terryma/vim-expand-region'
   " Rust integration
-  Plugin 'rust-lang/rust.vim'
+  "Plugin 'rust-lang/rust.vim'
   " Automatic tagfiles
   "Plugin 'xolox/vim-misc'
   "Plugin 'xolox/vim-easytags'
-  Plugin 'ludovicchabant/vim-gutentags'
+  "Plugin 'ludovicchabant/vim-gutentags'
   "Plugin 'craigemery/vim-autotag'
 
 
@@ -165,12 +163,20 @@ let g:gutentags_project_root = ['.', '.git', '.hg', '.svn', '.bzr', '_darcs', '_
 
 " Tagbar (find the CTags bin first)
 "let tagbar_ctags_bin='~/.vim/exuberant-ctags/build/bin/ctags'
-let tagbar_ctags_bin='~/.vim/universal-ctags/install/bin/ctags'
+let tagbar_ctags_bin='~/universal-ctags/install/bin/ctags'
 nnoremap <F7> :TagbarToggle<CR>
 
+
+" Print the syntax group under the cursor. Useful e.g. for discovering what
+" highlighting setting to change.
+nnoremap <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+
+
 " Session management
-nnoremap <leader>ss :mksession! .vimsession<CR>
-nnoremap <leader>sl :source .vimsession<CR>
+nnoremap <leader>ss :MBEClose!<CR>:mksession! .vimsession<CR>:MBEOpen<CR>
+nnoremap <leader>sl :MBECloseAll!<CR>:source .vimsession<CR>:MBEToggle<CR>
 "" Vim-Workspace (session management)
 "nnoremap <leader>s :ToggleWorkspace<CR>
 ""let g:workspace_create_new_tabs = 1
@@ -180,11 +186,16 @@ nnoremap <leader>sl :source .vimsession<CR>
 "" We already do our own persistent undos, so we disable them here
 "let g:workspace_persist_undo_history = 0
 
-" NERDtree and NERDtree-Tabs
-"nnoremap <F5> :NERDTreeTabsToggle<CR>
+" NERDtree and NERDtree
+nnoremap <F5> :NERDTreeToggle<CR>
 
 " MiniBufExplorer
-"nnoremap <F4> :MBEToggle<CR>
+nnoremap <F6> :MBEToggle<CR>
+" 0: buffer list at top/left of window
+" 1: buffer list at bottom/right of window
+let g:miniBufExplBRSplit = 0
+" Width of left/right buffer list
+let g:miniBufExplVSplit = 20
 
 " QuickHL
 nmap <leader>m <Plug>(quickhl-manual-this)
@@ -210,14 +221,14 @@ nnoremap <F4> :UndotreeToggle<CR>
 
 " JSON.vim
 " Do not hide quotes
-"let g:vim_json_syntax_conceal = 0
+let g:vim_json_syntax_conceal = 0
 
 " Multiple selections
-let g:multi_cursor_use_default_mapping=0
-let g:multi_cursor_next_key='<C-l>'
-let g:multi_cursor_prev_key='<C-j>'
-let g:multi_cursor_skip_key='<C-x>'
-let g:multi_cursor_quit_key='<Esc>'
+"let g:multi_cursor_use_default_mapping=0
+"let g:multi_cursor_next_key='<C-l>'
+"let g:multi_cursor_prev_key='<C-j>'
+"let g:multi_cursor_skip_key='<C-x>'
+"let g:multi_cursor_quit_key='<Esc>'
 
 " Signature (text marks are colored if there is a GitGutter sign in the gutter)
 let g:SignatureMarkTextHLDynamic = 1
@@ -237,9 +248,6 @@ let g:indentLine_setColors = 0
 ""let g:tex_conceal='abdmg' 
 "nmap <leader>la <plug>(vimtex-compile)<CR>
 
-" expand-region
-"map + <Plug>(expand_region_expand)
-"map - <Plug>(expand_region_shrink)
 
 " YouCompleteMe
 "let g:ycm_autoclose_preview_window_after_completion = 1
@@ -312,10 +320,13 @@ set wildmenu
 set wildmode=list:longest
 " Mark lines longer than 80 characters
 set colorcolumn=80
-hi ColorColumn ctermbg=0
+hi ColorColumn ctermbg=7
+hi Search ctermbg=7
 " Mark current cursor line
 set cursorline
-hi CursorLine term=reverse ctermbg=0 cterm=NONE
+"hi CursorLine term=reverse ctermbg=0 cterm=NONE
+" "TODO"
+hi Todo ctermbg=lightblue
 
 " Current buffer can be put to the background without writing to disk 
 " and when a background buffer becomes current again, marks and 
@@ -334,7 +345,7 @@ runtime macros/matchit.vim
 " Solarized color scheme
 set t_Co=256  "choose the right color palette
 set background=light
-colorscheme solarized
+"colorscheme solarized
 
 " Set gutter background color to match the line number col
 highlight SignColumn ctermbg=lightgrey
@@ -358,10 +369,10 @@ nnoremap j gj
 nnoremap k gk
 
 " Editing/sourcing .vimrc
-map <F6> :so $HOME/.vimrc<CR>
-map <F9> :e $HOME/.vimrc<CR>
+"map <F6> :so $HOME/.vimrc<CR>
+"map <F9> :e $HOME/.vimrc<CR>
 " And .bashrc
-map <F8> :e $HOME/.bashrc<CR>
+"map <F8> :e $HOME/.bashrc<CR>
 
 " Async make
 nmap <leader>mc :AsyncRun make clean<CR>
@@ -385,12 +396,14 @@ nmap <leader>qf :call QFixToggle()<CR>
 "au FocusLost * :wa
 
 " Cycle through buffers
-nnoremap <C-n> gt<CR>
-nnoremap <C-p> gT<CR>
+nnoremap <C-n> :bn<CR>
+nnoremap <C-p> :bN<CR>
+"nnoremap <C-n> gt<CR>
+"nnoremap <C-p> gT<CR>
 
 " Close buffer with Ctrl-W without losing splits.
 " NOTE: This only works if the buffer is not open in multiple splits
-"nnoremap <C-w> :bp\|bd#<CR>
+nnoremap <C-q> :bp\|bd#<CR>
 
 " Shift-Tab unindents (command mode and insert mode)
 nnoremap <S-Tab> <<
@@ -416,7 +429,7 @@ nnoremap <C-Right> :wincmd l<CR>
   set foldlevelstart=99
   set nofoldenable
   "" Set background color of fold marker
-  hi Folded ctermbg=0
+  hi Folded ctermbg=none
 
   "" <space> to toggle folds
   nnoremap <space> za
@@ -428,14 +441,14 @@ nnoremap <C-Right> :wincmd l<CR>
   " C++
   augroup filetypes
     au!
-  "  au FileType cpp    setlocal foldmethod=marker foldmarker={,}
+    au FileType cpp    setlocal foldmethod=syntax foldmarker={,}
   "  au FileType cuda   setlocal foldmethod=marker foldmarker={,}
   "  au FileType c      setlocal foldmethod=marker foldmarker={,}
   "  " Fix Python indentation
   "  au FileType python setlocal foldmethod=indent
   "  au FileType python setlocal shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=expr
   "  au FileType xml    setlocal foldmethod=syntax
-    au FileType html   setlocal foldmethod=syntax
+  "  au FileType html   setlocal foldmethod=syntax
   "  au FileType css    setlocal foldmethod=syntax
   augroup END
 
