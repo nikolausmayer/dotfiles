@@ -25,7 +25,7 @@ let g:ale_cpp_cc_options="-W -Wall -Wextra -Wpedantic -fconcepts -pthread -std=c
 let g:ale_cpp_gcc_options="-W -Wall -Wextra -Wpedantic -fconcepts -pthread -std=c++2a -I. -Isrc"
 " Shell
 " Ignore SC2006="$(...) instead of `...`"
-let g:ale_sh_shellcheck_options="-e SC2006"
+let g:ale_sh_shellcheck_options="-e SC2006 -e SC1017"
 " Manual linting
 nnoremap <leader>a :ALELint<CR>
 nnoremap <leader>aa :ALEToggle<CR>
@@ -128,6 +128,7 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   "Plugin 'ludovicchabant/vim-gutentags'
   "Plugin 'craigemery/vim-autotag'
 
+  "Plugin 'zivyangll/git-blame.vim'
 
   " Directly send scripts to Blender
   "Plugin 'mipmip/vim-run-in-blender'
@@ -233,6 +234,9 @@ let g:vim_json_syntax_conceal = 0
 " Signature (text marks are colored if there is a GitGutter sign in the gutter)
 let g:SignatureMarkTextHLDynamic = 1
 
+" Git blame
+"nnoremap <Leader>gb :<C-u>call gitblame#echo()<CR>
+
 " Indentation guides
 let g:indentLine_char = '┆'
 let g:indentLine_enabled = 0
@@ -337,7 +341,10 @@ set hidden
 if $VIM_CLEAN_MODE != 1
   set undofile
 endif
-"set undodir=~/.vim/undodir/
+set undodir=~/.vim/undodir/
+
+" Swapfiles location
+set directory=~/.vim/swpdir//
 
 " <%> can switch if/elsif/else/end, XML tags etc.
 runtime macros/matchit.vim
@@ -456,6 +463,7 @@ nnoremap <C-Right> :wincmd l<CR>
   "let g:xml_syntax_folding=1
 
   "" Remember folds
+  set viewdir=~/.vim/viewdir/
   if $VIM_CLEAN_MODE != 1
     set viewoptions=cursor,folds
     augroup remember_folds
@@ -463,8 +471,10 @@ nnoremap <C-Right> :wincmd l<CR>
       " view files are about 500 bytes
       " bufleave but not bufwinleave captures closing 2nd tab
       " nested is needed by bufwrite* (if triggered via other autocmd)
-      au BufWritePost ?* nested silent! mkview! %:p:h/.%:t.view~
-      au BufWinEnter ?* silent! source %:p:h/.%:t.view~
+      au BufWritePost ?* nested silent! mkview!
+      au BufWinEnter ?* silent! loadview
+      "au BufWritePost ?* nested silent! mkview! %:p:h/.%:t.view~
+      "au BufWinEnter ?* silent! source %:p:h/.%:t.view~
     augroup END
   endif
 "//////////////////////////////////////////////////////////////////////
