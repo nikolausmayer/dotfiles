@@ -56,22 +56,17 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   Plugin 'gmarik/vundle'
   " Solarized color scheme
   Plugin 'altercation/vim-colors-solarized'
-  " Syntax highlighter
-  "Plugin 'Syntastic'
   " Syntax checker and linter
   Plugin 'dense-analysis/ale'
   " Ctags 
   Plugin 'majutsushi/tagbar'
   " File system tree
   Plugin 'scrooloose/nerdtree'
-  "Plugin 'jistr/vim-nerdtree-tabs'
-  "Plugin 'fholgado/minibufexpl.vim'
   Plugin 'thasmin/minibufexpl.vim'
   " Add, delete, change surrounding ',",(,[,{,< and HTML-tags
   Plugin 'tpope/vim-surround'
   " Session management
   Plugin 'tpope/vim-obsession'
-  "Plugin 'thaerkh/vim-workspace'
   " Extend repeating per '.' to non-native commands
   Plugin 'vim-scripts/repeat.vim'
   " Highlight words
@@ -86,7 +81,6 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   " TODO tags etc
   "Plugin 'TaskList.vim'
   " Gundo (undo tree helper)
-  "Plugin 'sjl/gundo.vim'
   Plugin 'mbbill/undotree'
   " JSON tools
   "Plugin 'elzr/vim-json'
@@ -98,8 +92,6 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   "Plugin 'terryma/vim-multiple-cursors'
   " Align by patterns using :Tabularize 
   Plugin 'godlygeek/tabular'
-  " Python code folding
-  "Plugin 'tmhedberg/simpylfold'
   " Only recompute folds when file write happens
   "Plugin 'konfekt/fastfold'
   " Git diffs in the gutter
@@ -115,7 +107,7 @@ let b:ale_linters = {'cpp': ['gcc'], 'py': ['flake8', 'pylint'], 'sh': ['shellch
   " Code completion engine
   "Plugin 'Valloric/YouCompleteMe'
   " CtrlP
-  "Plugin 'kien/ctrlp.vim'
+  Plugin 'ctrlpvim/ctrlp.vim'
   " Increment lists of numbers etc
   "Plugin 'triglav/vim-visual-increment'
   " Grow/shrink visual regions
@@ -241,6 +233,10 @@ let g:SignatureMarkTextHLDynamic = 1
 let g:indentLine_char = '┆'
 let g:indentLine_enabled = 0
 let g:indentLine_setColors = 0
+
+" CtrlP
+let g:ctrlp_map = '<c-h>'
+let g:ctrlp_cmd = 'CtrlPBuffer'
 
 "" vimtex
 "let g:vimtex_mappings_enabled = 0
